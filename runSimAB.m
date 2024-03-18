@@ -12,14 +12,13 @@
 % Date: Jan 2024
 
 
-%rng(2024)
 %% Simulation parameters
 nbSim = 20;
 timeStab = 0.8; %Stabilization time
 dt = 0.005; %[s]
 delta = 0.055; %Delay of the feedback [s]
 I = 0.15; 
-forces = [3]; % [Nm]
+forces = [2]; % [Nm]
 nbForce = 3;% length(forces);
 x0 = [0;0;0;0;0;0;0;0]; %Initial state vector, state variables include 
 % angle, angular velocity, torque, external torque, target angle, target

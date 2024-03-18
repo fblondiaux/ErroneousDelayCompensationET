@@ -1,7 +1,5 @@
-% Script that defines usefull constants (manly for ploting)
-
-addpath 'C:\Users\fblondiaux\OneDrive - UCL\Documents\GitHub\MasterThesis\'
-figurePath = 'C:\Users\fblondiaux\OneDrive - UCL\Documents\GitHub\MasterThesis\FC01-Model\Figures\';
+% Script that defines usefull constants (mainly for ploting)
+figurePath = '.\Figures\';
 
 %Colors used through the scripts
 color_p = [195 71 8]/255; %Patients Color

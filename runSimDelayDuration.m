@@ -128,22 +128,23 @@ end
 
 
 %% PSD
+constantsPlots;
 F = figForInkscape(19/332*86.11,10/216*64.43);
 
-ax = subplot(2,10,11:12,'Units','centimeters');
+ax = subplot(2,10,1:20,'Units','centimeters');
 ax.Position = [14.8,26,25.2,34.4]/10; % define your position
 hold on;
 
 
-[M,I]= max(squeeze(mean(mean(PSD_ET65,2),1)));
-disp('The peak of the frequency is at (Hz):');disp(freq(I))
-
-[M,I]= max(squeeze(mean(mean(PSD_ET45,2),1)));
-disp('The peak of the frequency is at (Hz):');disp(freq(I))
+% [M,I]= max(squeeze(mean(mean(PSD_ET65,2),1)));
+% disp('The peak of the frequency is at (Hz):');disp(freq(I))
+% 
+% [M,I]= max(squeeze(mean(mean(PSD_ET45,2),1)));
+% disp('The peak of the frequency is at (Hz):');disp(freq(I))
 
 [M,I]= max(squeeze(mean(mean(PSD_ET,2),1)));
-disp('The peak of the frequency is at (Hz):')
-disp(freq(I))
+% disp('The peak of the frequency is at (Hz):')
+% disp(freq(I))
 
 % Dummy plots to have the legend in black
 plot45 = plot(freq,squeeze(mean(mean(PSD_HC45,2),1))/M,'Color','k','LineWidth',thickLine,'Linestyle',"--");

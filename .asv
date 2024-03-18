@@ -27,20 +27,22 @@ The simulations are performed using the LQG (Linear Quadratic Gaussian) framewor
 - Simulates a single movement using the LQG framework.
 - Accounts for delay errors, perturbation magnitude, and scaling factors for matrix estimations.
 
-### Remaining Files
-
-- Remaining files are functions related to plotting or to small variations of the simulation parameters.
 
 ## Quickstart
 Run the script 'runSim.m' to obtain the basic simulations and generate figures.
 
 runSim;
 
-## Matlab toolboxes
+Matlab toolboxes
 
     Statistics and Machine Learning Toolbox
 
-## License
+Acknowledgments
+
+    Author: Flo Blondiaux
+    Date: January 2024
+
+License
 
 This code is provided under the GPL-3.0 license. See the LICENSE.md file for details.
 Contact
