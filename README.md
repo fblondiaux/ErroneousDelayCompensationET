@@ -37,7 +37,7 @@ Run the script 'runSim.m' to obtain the basic simulations and generate figures.
 runSim; 
 
 Sample of output:
-![runSim](https://github.com/fblondiaux/ErroneousDelayCompensationET/Figures/runSim.png)
+![runSim](https://github.com/fblondiaux/ErroneousDelayCompensationET/blob/main/Figures/runSim.png)
 
 ## Matlab toolboxes
 
