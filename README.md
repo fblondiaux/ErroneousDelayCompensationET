@@ -34,7 +34,10 @@ The simulations are performed using the LQG (Linear Quadratic Gaussian) framewor
 ## Quickstart
 Run the script 'runSim.m' to obtain the basic simulations and generate figures.
 
-runSim;
+runSim; 
+
+Sample of output:
+![runSim](https://github.com/fblondiaux/ErroneousDelayCompensationET/Figures/runSim.png)
 
 ## Matlab toolboxes
 
