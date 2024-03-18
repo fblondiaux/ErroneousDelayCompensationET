@@ -48,5 +48,9 @@ Sample of output:
 This code is provided under the GPL-3.0 license. See the LICENSE.md file for details.
 Contact
 
+## Reference
+
+This code is a part of research article titled : "Erroneous compensation for long-latency feedback delays as origin of Essential Tremor."
+
 For any questions or issues, please refer to the corresponding author of the publication.
 
