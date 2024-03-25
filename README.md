@@ -46,7 +46,6 @@ Sample of output:
 ## License
 
 This code is provided under the GPL-3.0 license. See the LICENSE.md file for details.
-Contact
 
 ## Reference
 
