@@ -20,7 +20,7 @@ function figForInkscapeSave(F, fullFileName)
     hLegend = findobj(gcf, 'Type', 'legend');
     set(hLegend, 'FontSize', legendFontSize);
 
-    % Update the font size of the title
+    % save the figure
     set(F, 'PaperPositionMode', 'auto');
     saveas(gcf, fullFileName, 'svg')
 end
