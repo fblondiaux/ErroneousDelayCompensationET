@@ -1,25 +1,31 @@
-% Author: Flo Blondiaux
-% Date: Jan 2024
+% Simulate one movement using the LQG framework
 %
-% Simulates one movement using the LQG framework
-%
-% time_stab = Duration of the movement [s]
-% delay_error1 = percentage of error for the delay : (1 no error, <1 :
+% Parameters:
+%   - time_stab = Duration of the movement [s]
+%   - delay_error1 = percentage of error for the delay : (1 no error, <1 :
 %   under estimated delay,). Error in the extrapolation of the state.
-% delay_error2 = error in the extrapolation of the motor commands.
-% pert = magnitude of the perturbation triggered after 10 time steps [Nm].
-% x0= initial state vector.
-% delta = delay for the feedback [s]
-% I = inertia [Kgm²]
-% AB = scaling factors to create mismatch in the estimation of A and B matrices
+%   - delay_error2 = error in the extrapolation of the motor commands.
+%   - pert = magnitude of the perturbation triggered after 10 time steps [Nm].
+%   - x0= initial state vector.
+%   - delta = delay for the feedback [s]
+%   - I = inertia [Kgm²]
+%   - AB = scaling factors to create mismatch in the estimation of A and B matrices
 %   and kalman gains, [1 1 1] = no errors on the estimation.
+% Returns:
+%   - x = state vector.
+%   - u = motor commands.
+%   - x_est = estimated state vector.
+%   - xy = perturbation vector.
+%   - L = Kalman gains.
 function [x, u, x_est, xy, L] = simulation(time_stab, delay_error1, delay_error2, pert, x0, delta, I, AB)
 
+    % Check if AB is defined
     if nargin == 7
         %if missing define scaling factors for AB
         AB = [1 1 1];
     end
 
+    % Parameters
     dt = 0.005; %s
     delta_d = round(delta / dt); %discretized delay
     nbSteps = round(time_stab / dt);
