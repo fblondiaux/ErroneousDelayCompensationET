@@ -8,7 +8,7 @@
 % Returns:
 %   - F: The created figure object.
 function [F] = figForInkscape(FigWidth, FigHeight)
-
+    
     % Create the figure and axes objects
     F = figure('PaperPositionMode', 'manual');
     AX = gca;

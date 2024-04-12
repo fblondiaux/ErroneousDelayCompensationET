@@ -9,20 +9,20 @@
 %   - x0= initial state vector.
 %   - delta = delay for the feedback [s]
 %   - I = inertia [Kgm²]
-%   - AB = scaling factors to create mismatch in the estimation of A and B matrices
-%   and kalman gains, [1 1 1] = no errors on the estimation.
+%   - errorEstimation = scaling factors to create mismatch in the estimation of the prior 
+%     and kalman gains, [1 1] = no errors on the estimation.
 % Returns:
 %   - x = state vector.
 %   - u = motor commands.
 %   - x_est = estimated state vector.
-%   - xy = perturbation vector.
+%   - xy = estimated state knowing y.
 %   - L = Kalman gains.
-function [x, u, x_est, xy, L] = simulation(time_stab, delay_error1, delay_error2, pert, x0, delta, I, AB)
+function [x, u, x_est, xy, L] = simulation(time_stab, delay_error1, delay_error2, pert, x0, delta, I, errorEstimation)
 
-    % Check if AB is defined
+    % Check if errorEstimation is defined
     if nargin == 7
-        %if missing define scaling factors for AB
-        AB = [1 1 1];
+        %if missing define scaling factors for errorEstimation
+        errorEstimation = [1 1];
     end
 
     % Parameters
@@ -127,14 +127,14 @@ function [x, u, x_est, xy, L] = simulation(time_stab, delay_error1, delay_error2
         x(:, :, k + 1) = Ad * x(:, :, k) + Bd * u(:, k) + sdn + mvnrnd(zeros(n, 1), oXi)'; %True state
         y(:, :, k) = H * x(:, :, max(1, k - delta_d)) + mvnrnd(zeros(n, 1), oOmega)'; %Delayed sensory feedback
         [xy(:, :, k), V, M] = integrate(y(:, :, k), dt, delta, ...
-            u(:, max(k - delta_d, 1):k), Ac * AB(1), Bc * AB(2), ...
+            u(:, max(k - delta_d, 1):k), Ac, Bc, ...
             delay_error1, delay_error2); %Extrapolation over delay interval
-        x_p(:, :, k) = Ad * AB(1) * x_est(:, :, k) + Bd * AB(2) * u(:, k) + mvnrnd(zeros(n, 1), ceta)'; %State prediction
+        x_p(:, :, k) = Ad * x_est(:, :, k) + Bd * u(:, k) + mvnrnd(zeros(n, 1), ceta)'; %State prediction
         Ve = (alphaNoise_c ^ 2 * dt * Bc * u(:, k) * u(:, k)' * Bc') + oXi + ceta;
-        Sigmaxy = Ad * AB(1) * Sigmaxx;
+        Sigmaxy = Ad * Sigmaxx;
         Sigmayy = Sigmaxx + M * oOmega * M' + alphaNoise_c ^ 2 * V + (delta / dt) * oXi + ceta;
-        Sigmaxx = Ad * AB(1) * Sigmaxx * Ad' * AB(1) + Ve + ceta - Sigmaxy / Sigmayy * Sigmaxy'; % Eq 2.13 Crevecoeur 2019
-        x_est(:, :, k + 1) = x_p(:, :, k) + Sigmaxy / Sigmayy * AB(3) * (xy(:, :, k) - x_est(:, :, k)); % Eq 2.12 Crevecoeur 2019
+        Sigmaxx = Ad * Sigmaxx * Ad' + Ve + ceta - Sigmaxy / Sigmayy * Sigmaxy'; % Eq 2.13 Crevecoeur 2019
+        x_est(:, :, k + 1) = x_p(:, :, k)*errorEstimation(1) + Sigmaxy / Sigmayy * errorEstimation(2) * (xy(:, :, k) - x_est(:, :, k)); % Eq 2.12 Crevecoeur 2019
 
     end
 

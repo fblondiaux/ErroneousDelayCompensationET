@@ -1,4 +1,5 @@
 %% Simulation parameters
+addpath("Libs\")
 nbSim = 20;
 nbState = 8; % nb of state variables
 nbControl = 1; % nb of control variables
