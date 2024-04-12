@@ -8,73 +8,25 @@
 % Date: Jan 2024
 
 %% Simulation parameters
-nbSim = 20;
-timeStab = 0.8; %Stabilization time
-dt = 0.005; %[s]
-delta = 0.055; %Delay of the feedback [s]
-I = 0.15;
+simParams;
 forces = [2]; % [Nm]
 nbForce = 3; % length(forces);
-x0 = [0; 0; 0; 0; 0; 0; 0; 0]; %Initial state vector, state variables include
-% angle, angular velocity, torque, external torque, target angle, target
-% angular velocity, target torque and dummy variable target external torque
 
 %"Healthy Controls - HC"
-pert_x_HC = zeros(nbForce, nbSim, 8, round((timeStab) / dt)); % 8 = nb of state variables
-pert_xest_HC = zeros(nbForce, nbSim, 8, round((timeStab) / dt));
-pert_u_HC = zeros(nbForce, nbSim, 1, round((timeStab) / dt)); %1 = nb of control variables
-PSD_HC = zeros(nbForce, nbSim, 65);
+delayError = 1; % Delay error in percentage
+[freq, pert_x_HC, pert_xest_HC, pert_u_HC, PSD_HC] = runSimulation(nbSim, nbState, nbControl, timeStab, dt, delta, I, nbForce, x0, delayError, delayError);
 
-for f = 1:3
 
-    for i = 1:nbSim
-        delayError = 1; % Delay error in percentage
-        [x, u, x_est] = simulation(timeStab, delayError, delayError, f, x0, delta, I);
-        pert_x_HC(f, i, :, :) = squeeze(x);
-        pert_xest_HC(f, i, :, :) = squeeze(x_est);
-        pert_u_HC(f, i, :, :) = squeeze(u);
-        [freq, PSD_HC(f, i, :)] = getPSD(diff(pert_x_HC(f, i, 2, 40:end)) / dt, dt); % PSD computed on the stabilization time
-    end
-
-end
 
 % Y - Error only in M*y
-pert_x_Y = zeros(nbForce, nbSim, 8, round((timeStab) / dt));
-pert_xest_Y = zeros(nbForce, nbSim, 8, round((timeStab) / dt));
-pert_u_Y = zeros(nbForce, nbSim, 1, round((timeStab) / dt));
-PSD_Y = zeros(nbForce, nbSim, 65);
-%With a error
-for f = 1:3
-
-    for i = 1:nbSim
-        delayError = .7; % Delay is underestimated : Delay used is 70 % of the actual delay
-        [x, u, x_est] = simulation(timeStab, 0.7, 1, f, x0, delta, I);
-        pert_x_Y(f, i, :, :) = squeeze(x);
-        pert_xest_Y(f, i, :, :) = squeeze(x_est);
-        pert_u_Y(f, i, :, :) = squeeze(u);
-        [freq, PSD_Y(f, i, :)] = getPSD(diff(pert_x_Y(f, i, 2, 40:end)) / dt, dt);
-    end
-
-end
+delayError1 = 0.7; % Delay is underestimated : Delay used is 70 % of the actual delay
+delayError2 = 1; % Delay error in percentage
+[~, pert_x_Y, pert_xest_Y, pert_u_Y, PSD_Y] = runSimulation(nbSim, nbState, nbControl, timeStab, dt, delta, I, nbForce, x0, delayError1, delayError2);
 
 % Sig- error only in the Sum M*B*u
-pert_x_Sig = zeros(nbForce, nbSim, 8, round((timeStab) / dt));
-pert_xest_Sig = zeros(nbForce, nbSim, 8, round((timeStab) / dt));
-pert_u_Sig = zeros(nbForce, nbSim, 1, round((timeStab) / dt));
-PSD_Sig = zeros(nbForce, nbSim, 65);
-%With a error
-for f = 1:3
-
-    for i = 1:nbSim
-        delayError = .7; % Delay is underestimated : Delay used is 70 % of the actual delay
-        [x, u, x_est] = simulation(timeStab, 1, 0.7, f, x0, delta, I);
-        pert_x_Sig(f, i, :, :) = squeeze(x);
-        pert_xest_Sig(f, i, :, :) = squeeze(x_est);
-        pert_u_Sig(f, i, :, :) = squeeze(u);
-        [freq, PSD_Sig(f, i, :)] = getPSD(diff(pert_x_Sig(f, i, 2, 40:end)) / dt, dt);
-    end
-
-end
+delayError1 = 1; % Delay is underestimated : Delay used is 70 % of the actual delay
+delayError2 = 0.7; % Delay error in percentage
+[~, pert_x_Sig, pert_xest_Sig, pert_u_Sig, PSD_Sig] = runSimulation(nbSim, nbState, nbControl, timeStab, dt, delta, I, nbForce, x0, delayError1, delayError2);
 
 %% Plot with the arm angle, angular velocity, control and PSD
 

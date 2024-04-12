@@ -104,7 +104,7 @@ function [x, u, x_est, xy, L] = simulation(time_stab, delay_error1, delay_error2
 
     % Noise
     C = alphaNoise_d * Bd; % Signal dependent noise
-    oXi = noise * Bd * Bd';
+    oXi = noise * (Bd * Bd');
     ceta = noise * eye(n);
     oOmega = noise * eye(n); %Sensitive noise
     Sigmaxx = noise * eye(n);

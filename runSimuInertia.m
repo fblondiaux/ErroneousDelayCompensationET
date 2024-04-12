@@ -5,134 +5,35 @@
 % Date: Jan 2024
 
 %% Simulation parameters
-nbSim = 20;
-timeStab = 0.8; %Stabilization time
-dt = 0.005; %[s]
-delta = 0.055; %Delay of the feedback [s]
-I = 0.15;
-forces = [1 2 3]; % [Nm]
+simParams;
 nbForce = 3; % length(forces);
-x0 = [0; 0; 0; 0; 0; 0; 0; 0]; %Initial state vector, state variables include
-% angle, angular velocity, torque, external torque, target angle, target
-% angular velocity, target torque and dummy variable target external torque
 
 %% I = 0.15
-
+I1 = 0.15;
 %"Healthy Controls - HC"
-pert_x_HC = zeros(nbForce, nbSim, 8, round((timeStab) / dt)); % 8 = nb of state variables
-pert_xest_HC = zeros(nbForce, nbSim, 8, round((timeStab) / dt));
-pert_u_HC = zeros(nbForce, nbSim, 1, round(timeStab / dt)); %1 = nb of control variables
-PSD_HC = zeros(nbForce, nbSim, 65);
-
-for f = 1:3
-
-    for i = 1:nbSim
-        delayError = 1; % Delay error in percentage
-        [x, u, x_est, xy, L_HC] = simulation(timeStab, delayError, delayError, f, x0, delta, I);
-        pert_x_HC(f, i, :, :) = squeeze(x);
-        pert_xest_HC(f, i, :, :) = squeeze(x_est);
-        pert_u_HC(f, i, :, :) = squeeze(u);
-        [freq, PSD_HC(f, i, :)] = getPSD(diff(pert_x_HC(f, i, 2, 40:end)) / dt, dt);
-    end
-
-end
+delayError1 = 1; % Delay error in percentage
+[freq, pert_x_HC, pert_xest_HC, pert_u_HC, PSD_HC] = runSimulation(nbSim, nbState, nbControl, timeStab, dt, delta, I1, nbForce, x0, delayError1, delayError1);
 
 %"Essential Tremor" - ET
-pert_x_ET = zeros(nbForce, nbSim, 8, round(timeStab / dt));
-pert_xest_ET = zeros(nbForce, nbSim, 8, round(timeStab / dt));
-pert_u_ET = zeros(nbForce, nbSim, 1, round(timeStab / dt));
-PSD_ET = zeros(nbForce, nbSim, 65);
-%With a error
-for f = 1:3
-
-    for i = 1:nbSim
-        delayError = .7; % Delay is underestimated : Delay used is 70 % of the actual delay
-        [x, u, x_est, xy, L_ET] = simulation(timeStab, delayError, delayError, f, x0, delta, I);
-        pert_x_ET(f, i, :, :) = squeeze(x);
-        pert_xest_ET(f, i, :, :) = squeeze(x_est);
-        pert_u_ET(f, i, :, :) = squeeze(u);
-        [freq, PSD_ET(f, i, :)] = getPSD(diff(pert_x_ET(f, i, 2, 40:end)) / dt, dt);
-    end
-
-end
+delayError2 = .7; % Delay is underestimated : Delay used is 70 % of the actual delay
+[~, pert_x_ET, pert_xest_ET, pert_u_ET, PSD_ET] = runSimulation(nbSim, nbState, nbControl, timeStab, dt, delta, I1, nbForce, x0, delayError2, delayError2);
 
 %% I=0.10
+I2 = 0.10;
 %"Healthy Controls - HC"
-pert_x_HC10 = zeros(nbForce, nbSim, 8, round((timeStab) / dt)); % 8 = nb of state variables
-pert_xest_HC10 = zeros(nbForce, nbSim, 8, round((timeStab) / dt));
-pert_u_HC10 = zeros(nbForce, nbSim, 1, round(timeStab / dt)); %1 = nb of control variables
-PSD_HC10 = zeros(nbForce, nbSim, 65);
-
-for f = 1:3
-
-    for i = 1:nbSim
-        delayError = 1; % Delay error in percentage
-        [x, u, x_est, xy, L_HC] = simulation(timeStab, delayError, delayError, f, x0, delta, .10);
-        pert_x_HC10(f, i, :, :) = squeeze(x);
-        pert_xest_HC10(f, i, :, :) = squeeze(x_est);
-        pert_u_HC10(f, i, :, :) = squeeze(u);
-        [freq, PSD_HC10(f, i, :)] = getPSD(diff(pert_x_HC10(f, i, 2, 40:end)) / dt, dt);
-    end
-
-end
+[~, pert_x_HC10, pert_xest_HC10, pert_u_HC10, PSD_HC10] = runSimulation(nbSim, nbState, nbControl, timeStab, dt, delta, I2, nbForce, x0, delayError1, delayError1);
 
 %"Essential Tremor" - ET
-pert_x_ET10 = zeros(nbForce, nbSim, 8, round(timeStab / dt));
-pert_xest_ET10 = zeros(nbForce, nbSim, 8, round(timeStab / dt));
-pert_u_ET10 = zeros(nbForce, nbSim, 1, round(timeStab / dt));
-PSD_ET10 = zeros(nbForce, nbSim, 65);
-%With a error
-for f = 1:3
-
-    for i = 1:nbSim
-        delayError = .7; % Delay is underestimated : Delay used is 70 % of the actual delay
-        [x, u, x_est, xy, L_ET10] = simulation(timeStab, delayError, delayError, f, x0, delta, 0.10);
-        pert_x_ET10(f, i, :, :) = squeeze(x);
-        pert_xest_ET10(f, i, :, :) = squeeze(x_est);
-        pert_u_ET10(f, i, :, :) = squeeze(u);
-        [freq, PSD_ET10(f, i, :)] = getPSD(diff(pert_x_ET10(f, i, 2, 40:end)) / dt, dt);
-    end
-
-end
+[~, pert_x_ET10, pert_xest_ET10, pert_u_ET10, PSD_ET10] = runSimulation(nbSim, nbState, nbControl, timeStab, dt, delta, I2, nbForce, x0, delayError2, delayError2);
 
 %% I = 0.20
+I3 = 0.20;
 %"Healthy Controls - HC"
-pert_x_HC20 = zeros(nbForce, nbSim, 8, round((timeStab) / dt)); % 8 = nb of state variables
-pert_xest_HC20 = zeros(nbForce, nbSim, 8, round((timeStab) / dt));
-pert_u_HC20 = zeros(nbForce, nbSim, 1, round(timeStab / dt)); %1 = nb of control variables
-PSD_HC20 = zeros(nbForce, nbSim, 65);
-
-for f = 1:3
-
-    for i = 1:nbSim
-        delayError = 1; % Delay error in percentage
-        [x, u, x_est, xy, L_HC20] = simulation(timeStab, delayError, delayError, f, x0, delta, .2);
-        pert_x_HC20(f, i, :, :) = squeeze(x);
-        pert_xest_HC20(f, i, :, :) = squeeze(x_est);
-        pert_u_HC20(f, i, :, :) = squeeze(u);
-        [freq, PSD_HC20(f, i, :)] = getPSD(diff(pert_x_HC20(f, i, 2, 40:end)) / dt, dt);
-    end
-
-end
+[~, pert_x_HC20, pert_xest_HC20, pert_u_HC20, PSD_HC20] = runSimulation(nbSim, nbState, nbControl, timeStab, dt, delta, I3, nbForce, x0, delayError1, delayError1);
 
 %"Essential Tremor" - ET
-pert_x_ET20 = zeros(nbForce, nbSim, 8, round(timeStab / dt));
-pert_xest_ET20 = zeros(nbForce, nbSim, 8, round(timeStab / dt));
-pert_u_ET20 = zeros(nbForce, nbSim, 1, round(timeStab / dt));
-PSD_ET20 = zeros(nbForce, nbSim, 65);
-%With a error
-for f = 1:3
+[~, pert_x_ET20, pert_xest_ET20, pert_u_ET20, PSD_ET20] = runSimulation(nbSim, nbState, nbControl, timeStab, dt, delta, I3, nbForce, x0, delayError2, delayError2);
 
-    for i = 1:nbSim
-        delayError = .7; % Delay is underestimated : Delay used is 70 % of the actual delay
-        [x, u, x_est, xy, L_ET20] = simulation(timeStab, delayError, delayError, f, x0, delta, 0.2);
-        pert_x_ET20(f, i, :, :) = squeeze(x);
-        pert_xest_ET20(f, i, :, :) = squeeze(x_est);
-        pert_u_ET20(f, i, :, :) = squeeze(u);
-        [freq, PSD_ET20(f, i, :)] = getPSD(diff(pert_x_ET20(f, i, 2, 40:end)) / dt, dt);
-    end
-
-end
 
 %% Plot the PSD
 constantsPlots;

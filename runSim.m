@@ -8,18 +8,8 @@
 % of the delay in the state estimator.
 % This code is used to generate the figure 4 of the paper.
 
-%% Simulation parameters
-nbSim = 20;
-timeStab = 0.8; %Stabilization time
-dt = 0.005; %[s] discretization
-delta = 0.055; %Delay of the feedback [s]
-I = 0.15; %Inertia [Kgm²]
-forces = [1 2 3]; % [Nm]
-nbForce = length(forces);
-x0 = [0; 0; 0; 0; 0; 0; 0; 0]; %Initial state vector, state variables:
-% angle, angular velocity, torque, external torque, target angle, target
-% angular velocity, target torque and dummy variable target external torque
 
+% ALT COMMENTS
 %Extreme changes in the slopes of the R3 response were obtained
 % changing the following simulation parameters (Figure 4 - Dotted lines):
 %Smaller slope
@@ -28,45 +18,19 @@ x0 = [0; 0; 0; 0; 0; 0; 0; 0]; %Initial state vector, state variables:
 %Bigger slope
 %I=0.1;
 %delta = 0.065;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%"Healthy Controls - HC"
-pert_x_HC = zeros(nbForce, nbSim, 8, round(timeStab / dt)); % 8 = nb of state variables, pert_x_HC = state of the system
-pert_xest_HC = zeros(nbForce, nbSim, 8, round(timeStab / dt)); %Estimated state
-pert_u_HC = zeros(nbForce, nbSim, 1, round(timeStab / dt)); %1 = nb of control variables
-PSD_HC = zeros(nbForce, nbSim, 65); %Used to store the Power Spectral Density
+%% Simulation parameters
+simParams;
+nbForce = length(forces);
 
-for f = 1:3
+% "Healthy Controls - HC"
+delayError = 1; % Delay error in percentage
+[freq, pert_x_HC, pert_xest_HC, pert_u_HC, PSD_HC] = runSimulation(nbSim, nbState, nbControl, timeStab, dt, delta, I, nbForce, x0, delayError, delayError);
 
-    for i = 1:nbSim
-        delayError = 1; % Delay error in percentage, 1=no error
-        [x, u, x_est] = simulation(timeStab, delayError, delayError, f, x0, delta, I);
-        pert_x_HC(f, i, :, :) = squeeze(x);
-        pert_xest_HC(f, i, :, :) = squeeze(x_est);
-        pert_u_HC(f, i, :, :) = squeeze(u);
-        [freq, PSD_HC(f, i, :)] = getPSD(diff(pert_x_HC(f, i, 2, 40:end)) / dt, dt); %PSD over stabilization time
-    end
-
-end
-
-%"Essential Tremor" - ET
-pert_x_ET = zeros(nbForce, nbSim, 8, round(timeStab / dt));
-pert_xest_ET = zeros(nbForce, nbSim, 8, round(timeStab / dt));
-pert_u_ET = zeros(nbForce, nbSim, 1, round(timeStab / dt));
-PSD_ET = zeros(nbForce, nbSim, 65);
-%With a error
-for f = 1:3
-
-    for i = 1:nbSim
-        delayError = .7; % Delay is underestimated : Delay used in state estimation
-        % is 70% of the actual delay
-        [x, u, x_est] = simulation(timeStab, delayError, delayError, f, x0, delta, I);
-        pert_x_ET(f, i, :, :) = squeeze(x);
-        pert_xest_ET(f, i, :, :) = squeeze(x_est);
-        pert_u_ET(f, i, :, :) = squeeze(u);
-        [freq, PSD_ET(f, i, :)] = getPSD(diff(pert_x_ET(f, i, 2, 40:end)) / dt, dt);
-    end
-
-end
+% "Essential Tremor" - ET
+delayError = .7; % Delay is underestimated : Delay used in state estimation is 70% of the actual delay
+[~, pert_x_ET, pert_xest_ET, pert_u_ET, PSD_ET] = runSimulation(nbSim, nbState, nbControl, timeStab, dt, delta, I, nbForce, x0, delayError, delayError);
 
 %% Plot with the arm angle, angular velocity, control and PSD
 
