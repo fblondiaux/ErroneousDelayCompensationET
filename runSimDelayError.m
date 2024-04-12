@@ -62,4 +62,6 @@ ylabel('Normalized Power');
 title('Variation of delay errors');
 hold on;
 xlim([0 15]);
-figForInkscapeSave(F, append(figurePath, 'allSim_delayErrors'))
+
+%Save the figure
+savefigure(F, figurePath, 'allSim_delayErrors');

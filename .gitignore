@@ -1,2 +1,2 @@
 .DS_Store
-./Figures/allSim.fig
+./Figures/*.fig

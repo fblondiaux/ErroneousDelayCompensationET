@@ -77,4 +77,6 @@ hold on;
 xlim([0 15]);
 leg = legend([plot45, plot55, plot65], {'d=45ms', 'd=55ms', 'd=65ms'});
 leg.ItemTokenSize = [30/2, 18/2];
-figForInkscapeSave(F, append(figurePath, 'allSim_DelayDuration'))
+
+%Save the figure
+savefigure(F, figurePath, 'allSim_DelayDuration');

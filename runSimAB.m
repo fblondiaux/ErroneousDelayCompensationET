@@ -37,21 +37,11 @@ constantsPlots;
 
 %Define the size of the figure
 F = figForInkscape(19/332 * 86.11, 11/216 * 64.43);
-ax = subplot(1, 11, 1:5, 'Units', 'centimeters');
-ax.Position = [14.8, 66.5, 33.5, 23.86] / 10;
-hold on;
 
-for f = forces
-    plot(tv, squeeze(mean(pert_x_HC(f, :, 1, :), 2)) * 180 / pi, 'Color', color_c, 'LineWidth', thickLine);
-    plot(tv, squeeze(mean(pert_x_A(f, :, 1, :), 2)) * 180 / pi, 'Color', color_var1, 'LineWidth', thickLine); %,
-    plot(tv, squeeze(mean(pert_x_B(f, :, 1, :), 2)) * 180 / pi, 'Color', color_var2, 'LineWidth', thickLine); %
-end
-
-xline(0);
-xlabel('Time (ms)');
-ylabel('Angle (deg)');
-title('Elbow joint angle');
-xlim([tv(1) tv(end)])
+% For angle plot
+[ax1] = plotData(forces, tv, pert_x_HC, pert_x_A, 1, 'Angle (deg)', 'Elbow joint angle', ...
+    thickLine, [14.8, 66.5, 33.5, 23.86] / 10, {2, 11, 1:5}, ...
+    color_c, color_var1, color_var2, pert_x_B);
 
 %For different error of the Kalman gains
 %leg = legend(["No Error","K=0.2*K","K=2.5*K",],'FontSize',4, 'Location','best');
@@ -92,26 +82,17 @@ xlim([0 15]);
 %% Control Signal R2
 forces = 1:3;
 %LLR - R2
-ax = subplot(1, 11, 8:9, 'Units', 'centimeters');
-ax.Position = [79.5, 66.5, 13, 23.86] / 10; % define your position
-hold on;
-errorbar(forces, squeeze(mean(mean(pert_u_HC(:, :, 1, 19:25), 4), 2))', [0 0 0], '-o', 'Color', color_c, 'LineWidth', thickLine, 'CapSize', 0, 'MarkerFaceColor', color_c, 'MarkerSize', 5);
-errorbar(forces, squeeze(mean(mean(pert_u_A(:, :, 1, 19:25), 4), 2))', [0 0 0], '-o', 'Color', color_var1, 'LineWidth', thickLine, 'CapSize', 0, 'MarkerFaceColor', color_var1, 'MarkerSize', 5);
-errorbar(forces, squeeze(mean(mean(pert_u_B(:, :, 1, 19:25), 4), 2))', [0 0 0], '-o', 'Color', color_var2, 'LineWidth', thickLine, 'CapSize', 0, 'MarkerFaceColor', color_var2, 'MarkerSize', 5);
-axis([0.3 3.5 -5 25])
-xlabel('Perturbation (Nm)')
-ylabel('Control (a.u.)')
-title('R2')
+% For R2 plot
+plotErrorBar(forces, pert_u_HC, color_c, pert_u_A, color_var1, thickLine,...
+ [79.5, 66.5, 13, 23.86] / 10, {1, 11, 8:9}, 'Control (a.u.)', 'R2', 19:25, [0.3 3.5 -5 25], pert_u_B, color_var2);
 
-%LLR - R3
-ax = subplot(1, 11, 10:11, 'Units', 'centimeters');
-ax.Position = [100.5, 66.5, 13, 23.86] / 10; % define your position
-hold on;
-errorbar(forces, squeeze(mean(mean(pert_u_HC(:, :, 1, 25:31), 4), 2))', [0 0 0], '-o', 'Color', color_c, 'LineWidth', thickLine, 'CapSize', 0, 'MarkerFaceColor', color_c, 'MarkerSize', 5);
-errorbar(forces, squeeze(mean(mean(pert_u_A(:, :, 1, 25:31), 4), 2))', [0 0 0], '-o', 'Color', color_var1, 'LineWidth', thickLine, 'CapSize', 0, 'MarkerFaceColor', color_var1, 'MarkerSize', 5);
-errorbar(forces, squeeze(mean(mean(pert_u_B(:, :, 1, 25:31), 4), 2))', [0 0 0], '-o', 'Color', color_var2, 'LineWidth', thickLine, 'CapSize', 0, 'MarkerFaceColor', color_var2, 'MarkerSize', 5);
-axis([0.5 3.5 -5 25])
-title('R3')
+% For R3 plot
+plotErrorBar(forces, pert_u_HC, color_c, pert_u_A, color_var1, thickLine,...
+ [100.5, 66.5, 13, 23.86] / 10, {1, 11, 10:11}, 'Control (a.u.)', 'R3', 25:31, [0.5 3.5 -5 25], pert_u_B, color_var2);
+
+%% Title
 
 sgtitle('Impact of an error in the internal prediction')
-figForInkscapeSave(F, append(figurePath, 'allSim_AB'))
+
+%Save the figure
+savefigure(F, figurePath, 'allSim_AB');
