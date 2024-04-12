@@ -31,6 +31,7 @@ delayError = 1; % Delay error in percentage
 delayError = .7; % Delay is underestimated : Delay used in state estimation is 70 % of the actual delay
 [~, pert_x_ET, pert_xest_ET, pert_u_ET, PSD_ET] = runSimulation(nbSim, nbState, nbControl, timeStab, dt, delta, I, nbForce, x0, delayError, delayError);
 
+
 %% Plot with the arm angle, angular velocity, control and PSD
 
 tv = -10 * dt:dt:(timeStab - dt - 10 * dt); % Perturbation start after 10 timesteps
@@ -116,7 +117,6 @@ plotErrorBar(forces, pert_u_HC, color_c, pert_u_ET, color_p, thickLine,...
 % plot(tv(20:32),squeeze(mean(pert_xest_HC(f, :, 2, 19:31),2))*180/pi,'Color',color_c,'LineWidth',thickLine);
 % ylim([-100 0])
 % xlim([45 105])
-%
 
 %Save the figure
 savefigure(F, figurePath, 'allSim');
