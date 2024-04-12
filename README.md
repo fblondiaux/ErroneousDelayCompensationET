@@ -16,13 +16,13 @@ The simulations are performed using the LQG (Linear Quadratic Gaussian) framewor
 - Runs simulations for both "Healthy Controls" (HC) and "Essential Tremor" (ET) conditions.
 - Generates arm angle, angular velocity, control signal, and Power Spectral Density (PSD) plots.
 
-### Integration Function: `integrate.m`
+### Integration Function: `Libs/integrate.m`
 
 - Integrates state and motor commands over the delay interval.
 - Takes into account proportional errors in delay parameters.
 - Can include noise in the delay estimation.
 
-### Simulation Function: `simulation.m`
+### Simulation Function: `Libs/simulation.m`
 
 - Simulates a single movement using the LQG framework.
 - Accounts for delay errors, perturbation magnitude, and scaling factors for matrix estimations.
@@ -34,7 +34,13 @@ The simulations are performed using the LQG (Linear Quadratic Gaussian) framewor
 ## Quickstart
 Run the script 'runSim.m' to obtain the basic simulations and generate figures.
 
+```
 runSim; 
+```
+
+> 🚧 Success
+> 
+> Our implementation has been tested on MATLAB >= R2023a
 
 Sample of output:
 ![runSim](https://github.com/fblondiaux/ErroneousDelayCompensationET/blob/main/Figures/runSim.png)
@@ -48,8 +54,8 @@ Sample of output:
 This code is provided under the GPL-3.0 license. See the LICENSE.md file for details.
 
 ## Reference
-
-This code is a part of research article titled : "Erroneous compensation for long-latency feedback delays as origin of Essential Tremor."
+This code is a part of research article:  
+> 🥈 Blondiaux, F., Colmant, L., Lebrun, L., Hanseeuw, B., & Crevecoeur, F. (2024). Erroneous compensation for long-latency feedback delays as origin of Essential Tremor. bioRxiv, 2024-01.
 
 For any questions or issues, please refer to the corresponding author of the publication.
 
