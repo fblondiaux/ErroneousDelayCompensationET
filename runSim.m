@@ -40,7 +40,7 @@ PSD_HC = zeros(nbForce,nbSim,65); %Used to store the Power Spectral Density
 for f = 1:3
     for i = 1:nbSim
         delayError = 1; % Delay error in percentage, 1=no error
-        [x, u, x_est] = simulation(timeStab, delayError, delayError, f, x0,delta,I);
+        [x, u, x_est,~,L_HC] = simulation(timeStab, delayError, delayError, f, x0,delta,I);
         pert_x_HC(f, i, :, :) = squeeze(x);
         pert_xest_HC(f, i, :, :) = squeeze(x_est);
         pert_u_HC(f, i, :, :) = squeeze(u);
@@ -58,7 +58,7 @@ for f = 1:3
     for i = 1:nbSim
         delayError=.7; % Delay is underestimated : Delay used in state estimation 
         % is 70% of the actual delay
-        [x, u, x_est] = simulation(timeStab, delayError,delayError, f, x0,delta,I);
+        [x, u, x_est,~,L_ET] = simulation(timeStab, delayError,delayError, f, x0,delta,I);
         pert_x_ET(f, i, :, :) = squeeze(x);
         pert_xest_ET(f, i, :, :) = squeeze(x_est);
         pert_u_ET(f, i, :, :) = squeeze(u);
@@ -205,3 +205,11 @@ title('R3')
 % xlim([45 105])
 % 
 figForInkscapeSave(F,append(figurePath,'allSim'))
+
+X_hat_ET = squeeze(mean(pert_xest_ET(f, :, :, 31:31),2));
+X_hat_HC = squeeze(mean(pert_xest_HC(f, :, :, 31:31),2));
+
+E_u = squeeze(mean(mean(pert_u_ET(f,:,1,31:31),4),2))';
+H_u =squeeze(mean(mean(pert_u_HC(f,:,1,31:31),4),2))';
+
+%([E_p, E_v, E_u]./[H_p, H_v, H_u]*100) - 100
